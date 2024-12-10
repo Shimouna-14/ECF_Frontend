@@ -1,0 +1,75 @@
+/* reset.css */
+
+*,
+::before,
+::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 62.5%;
+    /* 16px * 62.5 / 100 = 10px = 1 rem */
+}
+
+body {
+    font-size: 1.6rem;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 2.8rem;
+}
+
+h3 {
+    font-size: 2.6rem;
+}
+
+h3 {
+    font-size: 2.4rem;
+}
+
+h4 {
+    font-size: 2.2rem;
+}
+
+h5 {
+    font-size: 2rem;
+}
+
+h6 {
+    font-size: 1.8rem;
+}
+
+p {
+    font-size: 1.6rem;
+}
+
+ul,
+li,
+ol {
+    list-style-type: none;
+}
+
+a:link,
+a:visited,
+a:hover {
+    text-decoration: none;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
+    /* Assure que les images ne créent pas d'espaces blancs */
+    display: block;
+}
+
+button {
+    outline: none;
+}
