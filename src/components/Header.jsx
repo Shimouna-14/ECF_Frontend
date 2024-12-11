@@ -15,11 +15,11 @@ function Header() {
             id='search'
             placeholder='Rechercher une recette'
           />
-          <img src={Search} alt='Rechercher une recette' />
+          <img src={Search} alt='Icone Recherche' />
         </label>
         <button id='btn'>+ Ajouter une recette</button>
         <button id='btn-mobile'>
-          <img id='plus-mobile' src={Plus} alt='Plus' />
+          <img id='plus-icon' src={Plus} alt='Icone Plus' />
         </button>
       </div>
     </header>

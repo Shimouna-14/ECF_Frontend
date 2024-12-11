@@ -1,5 +1,5 @@
+import { Link } from "react-router-dom";
 import BgImg from "../assets/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg";
-
 function Home() {
   return (
     <main>
@@ -36,13 +36,15 @@ function Home() {
       <section className='recettes'>
         <h3>Découvrez differentes recettes à realiser selon vos envies</h3>
         <section className='recettes--cards'>
-          <section className="cards">
-            <div>
-              <img src='' alt='' />
-            </div>
-            <p>Recette</p>
-            <p>Temps</p>
-          </section>
+          <Link to={"/recette"}>
+            <section className='cards'>
+              <div>
+                <img src='' alt='' />
+              </div>
+              <p>Recette</p>
+              <p>Temps : </p>
+            </section>
+          </Link>
         </section>
       </section>
     </main>

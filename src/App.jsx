@@ -12,7 +12,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/recipe/:name" element={<Recipe />} />
+          <Route path="/recette" element={<Recipe />} />
         </Routes>
       </BrowserRouter>
     </>
