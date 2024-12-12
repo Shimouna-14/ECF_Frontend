@@ -28,7 +28,7 @@ function Recipe() {
             <p>Temps</p>
           </span>
           <span>
-            <img src={HeartEmpty} alt='Icone Coeur' className="heart-empty" />
+            <img src={HeartEmpty} alt='Icone Coeur' className='heart-empty' />
             <p>Favori</p>
           </span>
         </section>
