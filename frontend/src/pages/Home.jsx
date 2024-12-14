@@ -1,24 +1,29 @@
 import { Link } from "react-router-dom";
-import BgImg from "../assets/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg";
 import { useEffect, useState } from "react";
 import FetchData from "../components/Fetch";
 
 function Home() {
-  const [filtreSelected, setFiltreSelected] = useState(true);
+  const [filterSelected, setFilterSelected] = useState(true);
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
   const [filterCategory, setFilterCategory] = useState(false);
   const [filterType, setFilterType] = useState(false);
+  const [recipes, setRecipes] = useState([]);
 
-  // Importation des categories et des types
+  // Import des categories et des types
   const getCategories = () =>
     FetchData("http://localhost:3000/filters/categories", setCategories);
   const getTypes = () =>
     FetchData("http://localhost:3000/filters/types", setTypes);
 
+  // Import des recettes
+  const getRecipes = () =>
+    FetchData("http://localhost:3000/recipes", setRecipes);
+
   useEffect(() => {
     getCategories();
     getTypes();
+    getRecipes();
   }, []);
 
   return (
@@ -31,27 +36,27 @@ function Home() {
         </div>
       </section>
 
-      <section className='filtre'>
-        <section className='filtre--titre'>
+      <section className='filter'>
+        <section className='filter--title'>
           <p
-            onClick={() => setFiltreSelected(true)}
+            onClick={() => setFilterSelected(true)}
             className={
-              filtreSelected ? "active-categories" : "filtre--titre--categories"
+              filterSelected ? "active-categories" : "inactive-categories"
             }>
             Catégories
           </p>
           <p
-            onClick={() => setFiltreSelected(false)}
+            onClick={() => setFilterSelected(false)}
             className={
-              filtreSelected ? "filtre--titre--types" : "active-types"
+              filterSelected ? "inactive-types" : "active-types"
             }>
             Types
           </p>
         </section>
 
         <section
-          className='contenu--categories'
-          style={{ display: filtreSelected ? "flex" : "none" }}>
+          className='content--categories'
+          style={{ display: filterSelected ? "flex" : "none" }}>
           {categories.map((category) => (
             <span key={category.id}>
               <p
@@ -71,8 +76,8 @@ function Home() {
           ))}
         </section>
         <section
-          className='contenu--types'
-          style={{ display: filtreSelected ? "none" : "flex" }}>
+          className='content--types'
+          style={{ display: filterSelected ? "none" : "flex" }}>
           {types.map((type) => (
             <span key={type.id}>
               <p
@@ -91,18 +96,20 @@ function Home() {
         </section>
       </section>
 
-      <section className='recettes'>
+      <section className='recipes'>
         <h3>Découvrez differentes recettes à realiser selon vos envies</h3>
-        <section className='recettes--cards'>
-          <Link to={"/recette"}>
-            <section className='cards'>
-              <div>
-                <img src='' alt='' />
-              </div>
-              <p>Recette</p>
-              <p>Temps : </p>
-            </section>
-          </Link>
+        <section className='recipes--cards'>
+          {recipes.map((recipe) => (
+            <Link to={`/recette/${recipe._id}`} key={recipe._id}>
+              <section className='cards'>
+                <div>
+                  <img src={`http://localhost:3000/images/${recipe.image}`} alt={recipe.title} />
+                </div>
+                <p>{recipe.title}</p>
+                <p>Temps : {recipe.time} </p>
+              </section>
+            </Link>
+          ))}
         </section>
       </section>
     </main>
