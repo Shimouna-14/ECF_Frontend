@@ -9,11 +9,11 @@ const Categories = [
   },
   {
     id: 3,
-    name: "Plat",
+    name: "Dessert",
   },
   {
     id: 4,
-    name: "Dessert",
+    name: "Plat",
   },
 ];
 

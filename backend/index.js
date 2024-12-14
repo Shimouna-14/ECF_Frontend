@@ -22,6 +22,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/recipes", recipesRoutes);
-app.use("/filtres", filtresRoutes);
+app.use("/filters", filtresRoutes);
 
 app.listen(3000, () => console.log("Server started on port 3000"));

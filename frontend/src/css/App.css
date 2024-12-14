@@ -102,7 +102,7 @@ header {
     padding: 2rem;
     gap: 2rem;
     width: 70%;
-    .modal--form--close{
+    .modal--form--close {
       position: absolute;
       top: 2rem;
       right: 3rem;
@@ -125,7 +125,6 @@ header {
             border-radius: 14px;
             font-size: 1.3rem;
             padding: 0.4rem 1rem;
-
           }
         }
         .form--select {
@@ -175,7 +174,6 @@ header {
           width: 100%;
           label {
             width: 100%;
-
           }
           .form--select {
             justify-content: space-between;
@@ -229,7 +227,7 @@ header {
   .contenu--categories,
   .contenu--types {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     width: 65%;
     height: 15rem;
@@ -240,18 +238,18 @@ header {
     background-color: var(--white);
     gap: 2rem;
     padding: 0 2rem;
+    overflow-x: scroll;
     span {
+      margin: auto;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: var(--black) 1px solid;
-      width: 8rem;
-      aspect-ratio: 1/1;
       border-radius: 50%;
       cursor: pointer;
     }
   }
 }
+
 
 @media screen and (min-width: 601px) and (max-width: 1023px) {
   .filtre {
