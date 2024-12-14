@@ -8,10 +8,10 @@ import FetchData from "../components/Fetch";
 import { useParams } from "react-router-dom";
 function Recipe() {
   const [like, setLike] = useState(false);
-  const [recipe, setRecipe] = useState([]);
-  const { id } = useParams();
+  const [recipe, setRecipe] = useState({});
+  const { _id } = useParams();
   const getRecipe = () =>
-    FetchData(`http://localhost:3000/recipes/${id}`, setRecipe);
+    FetchData(`http://localhost:3000/recipes/${_id}`, setRecipe);
 
   useEffect(() => {
     getRecipe();
@@ -19,7 +19,7 @@ function Recipe() {
 
   return (
     <main>
-      {recipe.map((recipe) => (
+      {recipe ? (
         <>
           <section className='recipe'>
             <section className='recipe--title'>
@@ -43,10 +43,10 @@ function Recipe() {
               </span>
               <span>
                 <img
-                  onClick={() => setLike(like)}
+                  onClick={() => setLike(!like)}
                   src={like ? HeartFull : HeartEmpty}
                   alt='Icone Coeur'
-                  className={like ? "heart-full" : "heart-empty"}
+                  className='heart {like ? "heart-full" : "heart-empty"}'
                 />
                 <p>Favori</p>
               </span>
@@ -58,11 +58,13 @@ function Recipe() {
               <div>
                 <h3>Ingredients</h3>
                 <ul>
-                  {recipe.ingredients.map((ingredient) => (
-                    <li>{ingredient}</li>
-                  ))}
+                  {recipe.ingredients &&
+                    recipe.ingredients.map((ingredient, index) => (
+                      <li key={index}>{ingredient}</li>
+                    ))}
                 </ul>
               </div>
+              <hr />
               <img
                 src={`http://localhost:3000/images/${recipe.image}`}
                 alt={recipe.title}
@@ -70,17 +72,20 @@ function Recipe() {
             </section>
             <section className='preparation--steps'>
               <ul>
-                <ul>
-                  <p>Etape 1</p>
-                  {recipe.steps.map((step) => (
-                    <li>{step}</li>
+                {recipe.steps &&
+                  recipe.steps.map((step, index) => (
+                    <ul>
+                      <p key={index}>Etape {recipe.steps.indexOf(step) + 1}</p>
+                      <li>{step}</li>
+                    </ul>
                   ))}
-                </ul>
               </ul>
             </section>
           </section>
         </>
-      ))}
+      ) : (
+        <p>La recette n'existe pas</p>
+      )}
     </main>
   );
 }
