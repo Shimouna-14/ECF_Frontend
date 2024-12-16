@@ -42,14 +42,19 @@ const searchRecipe = async (req, res) => {
 // Création d'une nouvelle recette
 const createRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.create(req.body);
+    const image = req.file ? req.file.filename : null;
+    const recipeData = { ...req.body, image };
+    console.log(req.body);
+    const recipe = await Recipe.create(recipeData);
+
     if (!recipe) {
       return res.status(404).json({ message: "No recipe created" });
     }
     return res.status(201).json(recipe);
-  } catch (error) {}
+  } catch (error) {
+    // console.log(error);
+  }
 };
-
 // Suppression d'une recette
 const deleteRecipe = async (req, res) => {
   try {

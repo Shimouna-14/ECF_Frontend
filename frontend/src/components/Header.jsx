@@ -1,20 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Plus from "../assets/plus-solid.svg";
 import Search from "../assets/search-solid.svg";
 import Xmark from "../assets/xmark-solid.svg";
 import { Link } from "react-router-dom";
 import HeartFull from "../assets/heart-solid.svg";
+import FetchData from "../components/Fetch";
+
 function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [isOpen, setIsOpen] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [hours, setHours] = useState("");
+  const [formData, setFormData] = useState({
+    image: null,
+    title: "",
+    description: "",
+    category: "",
+    type: "",
+    ingredients: "",
+    steps: "",
+    time: "",
+  });
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState("");
+
+  // Import des categories et des types
+  const getCategories = () =>
+    FetchData("http://localhost:3000/filters/categories", setCategories);
+  const getTypes = () =>
+    FetchData("http://localhost:3000/filters/types", setTypes);
 
   // Aperçu de l'image
-  const [preview, setPreview] = useState(null);
-  const handleFile = (e) => {
+  const handlePreview = (e) => {
     const file = e.target.files[0];
     setFormData({ ...formData, image: file });
     const previewUrl = URL.createObjectURL(file);
     setPreview(previewUrl);
+  };
+
+  // Envoi de l'image
+  const handleImage = (e) => {
+    setImage(e.target.files[0]);
   };
 
   // Données du formulaire
@@ -23,23 +49,41 @@ function Header() {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Formatage des heures
+  const handleHours = (e) => {
+    const value = e.target.value;
+    const regex = /^[0-9h ]*$/;
+    if (value.match(regex)) {
+      setHours(value);
+    }
+  };
+
+  console.log(formData);
+
   // Envoi du formulaire pour la création d'une recette
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataToSend = new FormData();
 
-    const formData = new FormData();
-    formData.append("image", formData.image);
-    formData.append("title", formData.title);
-    formData.append("description", formData.description);
-    formData.append("type", formData.type);
-    formData.append("category", formData.category);
-    formData.append("ingredients", formData.ingredients);
-    formData.append("steps", formData.steps);
-    formData.append("time", formData.time);
+    if (formData.image) {
+      formDataToSend.append("image", formData.image);
+    }
+
+    formDataToSend.append("title", formData.title); // Utilisation explicite
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("type", formData.type);
+    formDataToSend.append("category", formData.category);
+    formDataToSend.append("ingredients", formData.ingredients);
+    formDataToSend.append("steps", formData.steps);
+    formDataToSend.append("time", hours);
+
+    for (let [key, value] of formDataToSend.entries()) {
+      console.log(`${key}: `, value);
+    }
     try {
       const response = await fetch("http://localhost:3000/recipes/create", {
         method: "POST",
-        body: formData,
+        body: formDataToSend,
       });
 
       if (response.ok) {
@@ -47,8 +91,8 @@ function Header() {
           image: null,
           title: "",
           description: "",
-          type: "",
           category: "",
+          type: "",
           ingredients: "",
           steps: "",
           time: "",
@@ -56,11 +100,20 @@ function Header() {
         setPreview(null);
         alert("Votre recette a été enregistrée avec succès !");
         setIsOpen(false);
+      } else {
+        const errorData = await response.json();
+        console.error("Erreur serveur :", errorData);
+        alert("Une erreur s'est produite lors de l'envoi de la recette.");
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi :", error);
     }
   };
+
+  useEffect(() => {
+    getCategories();
+    getTypes();
+  }, []);
 
   return (
     <header>
@@ -75,7 +128,7 @@ function Header() {
             id='search'
             placeholder='Rechercher une recette'
           />
-          <img loading="lazy" src={Search} alt='Icone Recherche' />
+          <img loading='lazy' src={Search} alt='Icone Recherche' />
         </label>
 
         <button className='btn' onClick={() => setIsOpen(true)}>
@@ -83,23 +136,29 @@ function Header() {
         </button>
 
         <button className='btn-mobile' onClick={() => setIsOpen(true)}>
-          <img loading="lazy" id='plus-icon' src={Plus} alt='Icone Plus' />
+          <img loading='lazy' id='plus-icon' src={Plus} alt='Icone Plus' />
         </button>
 
-        <Link className="btn" to='/favoris'>
+        <Link className='btn' to='/favoris'>
           <button>Favoris</button>
         </Link>
 
         <Link to='/favoris'>
-          <button className="btn-mobile">
-            <img loading="lazy" id="heart-icon" src={HeartFull} alt='Icone Coeur' />
+          <button className='btn-mobile'>
+            <img
+              loading='lazy'
+              id='heart-icon'
+              src={HeartFull}
+              alt='Icone Coeur'
+            />
           </button>
         </Link>
 
         {isOpen && (
           <section className='modal'>
             <section className='modal--form'>
-              <img loading="lazy"
+              <img
+                loading='lazy'
                 src={Xmark}
                 alt='Icone Croix'
                 className='modal--form--close'
@@ -107,122 +166,143 @@ function Header() {
               />
               <h2>Ajouter une recette</h2>
               <form onSubmit={handleSubmit}>
-                <div>
-                  {/* Image et preview */}
-                  {preview && (
-                    <div>
-                      <img loading="lazy" src={preview} alt='Preview' className='preview' />
+                <section>
+                  <section>
+                    {/* Image et preview */}
+                    {preview && (
+                      <img
+                        loading='lazy'
+                        src={preview}
+                        alt='Preview'
+                        className='preview'
+                      />
+                    )}
+                    <label>
+                      Ajouter une image
+                      <input
+                        type='file'
+                        name='file'
+                        id='file'
+                        onChange={(e) => {
+                          handlePreview(e);
+                          handleImage(e);
+                        }}
+                        required
+                      />
+                    </label>
+
+                    {/* Nom de la recette */}
+                    <label>
+                      Titre
+                      <input
+                        type='text'
+                        name='title'
+                        id='title'
+                        placeholder='Nom de la recette'
+                        value={formData.title}
+                        onChange={handleChange}
+                        required
+                      />
+                    </label>
+
+                    {/* Description */}
+                    <label>
+                      Description
+                      <textarea
+                        id='description'
+                        name='description'
+                        placeholder='Description de la recette'
+                        value={formData.description}
+                        onChange={handleChange}
+                        required
+                      />
+                    </label>
+
+                    <div className='form--select'>
+                      {/* Type de recette */}
+                      <label>
+                        Type
+                        <select
+                          name='type'
+                          id='type'
+                          value={formData.type}
+                          onChange={handleChange}
+                          required>
+                          <option value=''>Choisir</option>
+                          {types.map((type) => (
+                            <option key={type.id} value={type.name}>
+                              {type.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      {/* Categorie de recette */}
+                      <label>
+                        Categorie
+                        <select
+                          id='category'
+                          name='category'
+                          value={formData.category}
+                          onChange={handleChange}
+                          required>
+                          <option value=''>Choisir</option>
+                          {categories.map((category) => (
+                            <option key={category.id} value={category.name}>
+                              {category.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
                     </div>
-                  )}
-                  <label>
-                    Ajouter une image
-                    <input
-                      type='file'
-                      name='file'
-                      id='file'
-                      onChange={handleFile}
-                      required
-                    />
-                  </label>
+                  </section>
 
-                  {/* Nom de la recette */}
-                  <label>
-                    Titre
-                    <input
-                      type='text'
-                      name='title'
-                      id='title'
-                      placeholder='Nom de la recette'
-                      value={formData.title}
-                      onSubmit={handleChange}
-                      required
-                    />
-                  </label>
-
-                  <label>
-                    Description
-                    <textarea
-                      id='description'
-                      name='description'
-                      placeholder='Description de la recette'
-                      value={formData.description}
-                      onChange={handleChange}
-                      required
-                    />
-                  </label>
-
-                  <div className='form--select'>
-                    {/* Type de recette */}
+                  <section>
+                    {/* Liste des ingrédients */}
                     <label>
-                      Type
-                      <select
-                        name='type'
-                        id='type'
-                        value={formData.type}
+                      Ingrédients
+                      <textarea
+                        id='ingredients'
+                        name='ingredients'
+                        placeholder="Nom de l'ingrédient"
+                        value={formData.ingredients}
                         onChange={handleChange}
-                        required>
-                        <option value=''>Choisir</option>
-                      </select>
+                        required
+                      />
                     </label>
 
-                    {/* Categorie de recette */}
+                    {/* Liste des etapes */}
                     <label>
-                      Categorie
-                      <select
-                        id='category'
-                        name='category'
-                        value={formData.category}
+                      Etapes
+                      <textarea
+                        id='steps'
+                        name='steps'
+                        placeholder='Étapes de la recette'
+                        value={formData.steps}
                         onChange={handleChange}
-                        required>
-                        <option value=''>Choisir</option>
-                      </select>
+                        required
+                      />
                     </label>
-                  </div>
-                </div>
 
-                <div>
-                  {/* Liste des ingrédients */}
-                  <label>
-                    Ingrédients
-                    <textarea
-                      id='ingredients'
-                      name='ingredients'
-                      placeholder="Nom de l'ingrédient"
-                      value={formData.description}
-                      onChange={handleChange}
-                      required
-                    />
-                  </label>
+                    {/* Temps */}
+                    <label>
+                      Temps
+                      <input
+                        type='text'
+                        name='time'
+                        id='time'
+                        value={hours}
+                        placeholder='hh h mm'
+                        onChange={handleHours}
+                        maxLength={5}
+                        required
+                      />
+                    </label>
+                  </section>
+                </section>
 
-                  {/* Liste des etapes */}
-                  <label>
-                    Etapes
-                    <textarea
-                      id='etapes'
-                      name='etapes'
-                      placeholder='Étapes de la recette'
-                      value={formData.ingredients}
-                      onChange={handleChange}
-                      required
-                    />
-                  </label>
-
-                  {/* Temps */}
-                  <label>
-                    Temps
-                    <input
-                      type='time'
-                      name='time'
-                      id='time'
-                      value={formData.time}
-                      onChange={handleChange}
-                      required
-                    />
-                  </label>
-                </div>
+                <button type='submit'>Publier la recette</button>
               </form>
-
-              <button type='submit'>Publier la recette</button>
             </section>
           </section>
         )}
