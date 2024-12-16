@@ -70,13 +70,14 @@ header {
   }
 }
 
-#btn-mobile {
+.btn-mobile {
   display: none;
   padding: 1rem;
-  #plus-icon {
+  #plus-icon, #heart-icon {
     height: 1rem;
     aspect-ratio: 1/1;
   }
+
 }
 
 /* ------------------ Modal ------------------  */
@@ -144,7 +145,7 @@ header {
 }
 
 @media screen and (min-width: 1024px) {
-  #btn-mobile {
+  .btn-mobile {
     display: none;
   }
   header {
@@ -157,10 +158,10 @@ header {
 }
 
 @media screen and (max-width: 1023px) {
-  #btn-mobile {
+  .btn-mobile {
     display: block;
   }
-  #btn {
+  .btn {
     display: none;
   }
   .modal {
@@ -317,15 +318,13 @@ header {
 .recipes {
   padding: 3rem 5rem 6rem;
   background-color: var(--white);
-  h3 {
-    margin-bottom: 4rem;
-  }
   .recipes--cards {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     flex-direction: row;
     gap: 5rem;
+    margin-top: 4rem;
     .cards {
       color: var(--black);
       background-color: var(--cream);
@@ -412,7 +411,9 @@ header {
         aspect-ratio: 1/1;
         margin-bottom: 1rem;
       }
-      .heart {cursor: pointer;}
+      .heart {
+        cursor: pointer;
+      }
     }
   }
 }

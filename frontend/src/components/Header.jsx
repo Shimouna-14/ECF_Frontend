@@ -3,7 +3,7 @@ import Plus from "../assets/plus-solid.svg";
 import Search from "../assets/search-solid.svg";
 import Xmark from "../assets/xmark-solid.svg";
 import { Link } from "react-router-dom";
-
+import HeartFull from "../assets/heart-solid.svg";
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({});
@@ -78,13 +78,23 @@ function Header() {
           <img src={Search} alt='Icone Recherche' />
         </label>
 
-        <button id='btn' onClick={() => setIsOpen(true)}>
+        <button className='btn' onClick={() => setIsOpen(true)}>
           + Ajouter une recette
         </button>
 
-        <button id='btn-mobile' onClick={() => setIsOpen(true)}>
+        <button className='btn-mobile' onClick={() => setIsOpen(true)}>
           <img id='plus-icon' src={Plus} alt='Icone Plus' />
         </button>
+
+        <Link className="btn" to='/favoris'>
+          <button>Favoris</button>
+        </Link>
+
+        <Link to='/favoris'>
+          <button className="btn-mobile">
+            <img id="heart-icon" src={HeartFull} alt='Icone Coeur' />
+          </button>
+        </Link>
 
         {isOpen && (
           <section className='modal'>
@@ -151,7 +161,7 @@ function Header() {
                         value={formData.type}
                         onChange={handleChange}
                         required>
-                      <option value=''>Choisir</option>
+                        <option value=''>Choisir</option>
                       </select>
                     </label>
 

@@ -7,15 +7,31 @@ import { useEffect, useState } from "react";
 import FetchData from "../components/Fetch";
 import { useParams } from "react-router-dom";
 function Recipe() {
-  const [like, setLike] = useState(false);
-  const [recipe, setRecipe] = useState({});
   const { _id } = useParams();
+  const [recipe, setRecipe] = useState({});
+  const [favorite, setFavorite] = useState(
+    JSON.parse(localStorage.getItem("favorite")) || []
+  );
+  const [like, setLike] = useState(
+    favorite.find((item) => item._id === _id) ? false : true
+  );
+
   const getRecipe = () =>
     FetchData(`http://localhost:3000/recipes/${_id}`, setRecipe);
 
+  const addFavorite = () => {
+    const newFavorite = like ? 
+      [...favorite, recipe]
+      : favorite.filter((item) => item._id !== recipe._id);
+    setFavorite(newFavorite);
+    localStorage.setItem("favorite", JSON.stringify(newFavorite));
+    setLike(!like);
+  };
+
+
   useEffect(() => {
     getRecipe();
-  }, []);
+  }, [_id]);
 
   return (
     <main>
@@ -43,10 +59,11 @@ function Recipe() {
               </span>
               <span>
                 <img
-                  onClick={() => setLike(!like)}
-                  src={like ? HeartFull : HeartEmpty}
+                  onClick={() => addFavorite()}
+                  src={like ? HeartEmpty :  HeartFull}
                   alt='Icone Coeur'
-                  className='heart {like ? "heart-full" : "heart-empty"}'
+                  className="heart"
+                  key={_id}
                 />
                 <p>Favori</p>
               </span>
@@ -74,8 +91,8 @@ function Recipe() {
               <ul>
                 {recipe.steps &&
                   recipe.steps.map((step, index) => (
-                    <ul>
-                      <p key={index}>Etape {recipe.steps.indexOf(step) + 1}</p>
+                    <ul key={index}>
+                      <p>Etape {index + 1}</p>
                       <li>{step}</li>
                     </ul>
                   ))}
@@ -91,3 +108,4 @@ function Recipe() {
 }
 
 export default Recipe;
+

@@ -26,6 +26,18 @@ const getRecipe = async (req, res) => {
     }    
 };
 
+const searchRecipe = async (req, res) => {
+    try {
+        const recipe = await Recipe.findOne({title: req.params.title});
+        if (!recipe) {
+            return res.status(404).json({ message: 'No recipe found' });
+        }
+        return res.status(200).json(recipe);
+    } catch (error) {
+        return res.status(500).json();
+    }    
+};
+
 // Création d'une nouvelle recette
 const createRecipe = async (req, res) => {
     try {
@@ -52,4 +64,4 @@ const deleteRecipe = async (req, res) => {
     }
 };
 
-module.exports = { getRecipes, getRecipe, createRecipe, deleteRecipe };
+module.exports = { getRecipes, getRecipe, searchRecipe, createRecipe, deleteRecipe };
