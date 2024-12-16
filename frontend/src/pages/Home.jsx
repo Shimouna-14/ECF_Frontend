@@ -5,7 +5,9 @@ import FetchData from "../components/Fetch";
 function Home() {
   const [filterSelected, setFilterSelected] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
   const [types, setTypes] = useState([]);
+  const [type, setType] = useState("");
   const [filterCategory, setFilterCategory] = useState(false);
   const [filterType, setFilterType] = useState(false);
   const [recipes, setRecipes] = useState([]);
@@ -18,7 +20,7 @@ function Home() {
 
   // Import des recettes
   const getRecipes = () =>
-    FetchData("http://localhost:3000/recipes", setRecipes);
+    FetchData(`http://localhost:3000/recipes`, setRecipes);
 
   useEffect(() => {
     getCategories();
@@ -36,35 +38,36 @@ function Home() {
         </div>
       </section>
 
+      {/* ---------- FILTRES ---------- */}
       <section className='filter'>
         <section className='filter--title'>
           <p
-            onClick={() => setFilterSelected(true)}
             className={
               filterSelected ? "active-categories" : "inactive-categories"
-            }>
+            }
+            onClick={() => setFilterSelected(true)}>
             Catégories
           </p>
           <p
-            onClick={() => setFilterSelected(false)}
-            className={
-              filterSelected ? "inactive-types" : "active-types"
-            }>
+            className={filterSelected ? "inactive-types" : "active-types"}
+            onClick={() => setFilterSelected(false)}>
             Types
           </p>
         </section>
 
+        {/* ---------- CATEGORIES ---------- */}
         <section
           className='content--categories'
           style={{ display: filterSelected ? "flex" : "none" }}>
           {categories.map((category) => (
             <span key={category.id}>
               <p
-                onClick={() =>
+                onClick={() => {
                   setFilterCategory(
                     filterCategory === category.id ? false : category.id
-                  )
-                }
+                  );
+                  setCategory(category.name);
+                }}
                 style={
                   filterCategory === category.id
                     ? { borderBottom: "var(--black) 1px solid" }
@@ -75,15 +78,18 @@ function Home() {
             </span>
           ))}
         </section>
+
+        {/* ---------- TYPES ---------- */}
         <section
           className='content--types'
           style={{ display: filterSelected ? "none" : "flex" }}>
           {types.map((type) => (
             <span key={type.id}>
               <p
-                onClick={() =>
-                  setFilterType(filterType === type.id ? false : type.id)
-                }
+                onClick={() => {
+                  setFilterType(filterType === type.id ? false : type.id);
+                  setType(type.name);
+                }}
                 style={
                   filterType === type.id
                     ? { borderBottom: "var(--black) 1px solid" }
@@ -95,21 +101,31 @@ function Home() {
           ))}
         </section>
       </section>
-
+      {/* ---------- RECETTES ---------- */}
       <section className='recipes'>
         <h3>Découvrez differentes recettes à realiser selon vos envies</h3>
         <section className='recipes--cards'>
-          {recipes.map((recipe) => (
-            <Link to={`/recette/${recipe._id}`} key={recipe._id}>
-              <section className='cards'>
-                <div>
-                  <img src={`http://localhost:3000/images/${recipe.image}`} alt={recipe.title} />
-                </div>
-                <p>{recipe.title}</p>
-                <p>Temps : {recipe.time} </p>
-              </section>
-            </Link>
-          ))}
+          {recipes
+            .filter(
+              (recipe) =>
+                (filterType === false ? true : recipe.type === type) &&
+                (filterCategory === false ? true : recipe.category === category)
+            )
+            .map((recipe) => (
+              <Link to={`/recette/${recipe._id}`} key={recipe._id}>
+                <section className='cards'>
+                  <div>
+                    <img
+                      loading='lazy'
+                      src={`http://localhost:3000/images/${recipe.image}`}
+                      alt={recipe.title}
+                    />
+                  </div>
+                  <p>{recipe.title}</p>
+                  <p>Temps : {recipe.time} </p>
+                </section>
+              </Link>
+            ))}
         </section>
       </section>
     </main>
@@ -117,3 +133,4 @@ function Home() {
 }
 
 export default Home;
+

@@ -21,14 +21,10 @@ const Types = [
   },
   {
     id: 6,
-    name: "Latine",
-  },
-  {
-    id: 7,
     name: "Orient",
   },
   {
-    id: 8,
+    id: 7,
     name: "Océanie",
   },
 ];

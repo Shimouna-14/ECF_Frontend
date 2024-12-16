@@ -6,6 +6,7 @@ import HeartEmpty from "../assets/heart-regular.svg";
 import { useEffect, useState } from "react";
 import FetchData from "../components/Fetch";
 import { useParams } from "react-router-dom";
+
 function Recipe() {
   const { _id } = useParams();
   const [recipe, setRecipe] = useState({});
@@ -16,18 +17,19 @@ function Recipe() {
     favorite.find((item) => item._id === _id) ? false : true
   );
 
+  // Import de la recette
   const getRecipe = () =>
     FetchData(`http://localhost:3000/recipes/${_id}`, setRecipe);
 
+  // Ajout ou suppression de la recette aux favoris dans le localStorage
   const addFavorite = () => {
-    const newFavorite = like ? 
-      [...favorite, recipe]
+    const newFavorite = like
+      ? [...favorite, recipe]
       : favorite.filter((item) => item._id !== recipe._id);
     setFavorite(newFavorite);
     localStorage.setItem("favorite", JSON.stringify(newFavorite));
     setLike(!like);
   };
-
 
   useEffect(() => {
     getRecipe();
@@ -44,25 +46,27 @@ function Recipe() {
               <p>{recipe.description}</p>
             </section>
 
+            {/* SECTION INFORMATIONS */}
             <section className='recipe--infos'>
               <span>
-                <img src={Globe} alt='Icone Globe' />
+                <img loading='lazy' src={Globe} alt='Icone Globe' />
                 <p>{recipe.type}</p>
               </span>
               <span>
-                <img src={Ustensil} alt='Icone Ustensil' />
+                <img loading='lazy' src={Ustensil} alt='Icone Ustensil' />
                 <p>{recipe.category}</p>
               </span>
               <span>
-                <img src={Clock} alt='Icone Horloge' />
+                <img loading='lazy' src={Clock} alt='Icone Horloge' />
                 <p>{recipe.time}</p>
               </span>
               <span>
                 <img
+                  loading='lazy'
                   onClick={() => addFavorite()}
-                  src={like ? HeartEmpty :  HeartFull}
+                  src={like ? HeartEmpty : HeartFull}
                   alt='Icone Coeur'
-                  className="heart"
+                  className='heart'
                   key={_id}
                 />
                 <p>Favori</p>
@@ -74,6 +78,7 @@ function Recipe() {
             <section className='preparation--ingredients'>
               <div>
                 <h3>Ingredients</h3>
+                {/* lISTE DES INGREDIENTS */}
                 <ul>
                   {recipe.ingredients &&
                     recipe.ingredients.map((ingredient, index) => (
@@ -83,10 +88,12 @@ function Recipe() {
               </div>
               <hr />
               <img
+                loading='lazy'
                 src={`http://localhost:3000/images/${recipe.image}`}
                 alt={recipe.title}
               />
             </section>
+            {/* ETAPES DE LA PREPARATION */}
             <section className='preparation--steps'>
               <ul>
                 {recipe.steps &&
@@ -108,4 +115,3 @@ function Recipe() {
 }
 
 export default Recipe;
-

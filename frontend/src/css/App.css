@@ -24,7 +24,7 @@ body {
   font-style: normal;
 }
 
-/* ------------------ Header ------------------  */
+/* ------------------ HEADER ------------------  */
 header {
   margin-bottom: 4rem;
   h1 {
@@ -80,7 +80,7 @@ header {
 
 }
 
-/* ------------------ Modal ------------------  */
+/* ------------------ MODAL ------------------  */
 .modal {
   position: fixed;
   top: 0;
@@ -186,7 +186,7 @@ header {
   }
 }
 
-/* ------------------------- Page Home -------------------------  */
+/* ------------------------- PAGE ACCUEIL -------------------------  */
 .hero {
   width: 100%;
   height: 25rem;
@@ -207,7 +207,7 @@ header {
   }
 }
 
-/* ------------------  Filtres ------------------ */
+/* ------------------  FILTRE ------------------ */
 
 .filter {
   display: flex;
@@ -283,7 +283,7 @@ header {
   }
 }
 
-/* ------------------ Switch filter   ------------------ */
+/* ------------------ FILTRES SWITCH   ------------------ */
 
 .inactive-categories,
 .inactive-types {
@@ -313,7 +313,7 @@ header {
   border-top-right-radius: 16px;
 }
 
-/* ------------------ Recettes ------------------ */
+/* ------------------ RECETTES ------------------ */
 
 .recipes {
   padding: 3rem 5rem 6rem;
@@ -373,7 +373,7 @@ header {
   }
 }
 
-/* ------------------------- Page Recette -------------------------  */
+/* ------------------------- PAGE RECETTE -------------------------  */
 .recipe {
   width: 100%;
   height: 25rem;
@@ -436,7 +436,7 @@ header {
   }
 }
 
-/* ------------------ Preparation ------------------ */
+/* ------------------ PREPARATION ------------------ */
 .preparation {
   display: flex;
   flex-direction: column;

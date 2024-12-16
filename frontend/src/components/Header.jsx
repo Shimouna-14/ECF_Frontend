@@ -75,7 +75,7 @@ function Header() {
             id='search'
             placeholder='Rechercher une recette'
           />
-          <img src={Search} alt='Icone Recherche' />
+          <img loading="lazy" src={Search} alt='Icone Recherche' />
         </label>
 
         <button className='btn' onClick={() => setIsOpen(true)}>
@@ -83,7 +83,7 @@ function Header() {
         </button>
 
         <button className='btn-mobile' onClick={() => setIsOpen(true)}>
-          <img id='plus-icon' src={Plus} alt='Icone Plus' />
+          <img loading="lazy" id='plus-icon' src={Plus} alt='Icone Plus' />
         </button>
 
         <Link className="btn" to='/favoris'>
@@ -92,14 +92,14 @@ function Header() {
 
         <Link to='/favoris'>
           <button className="btn-mobile">
-            <img id="heart-icon" src={HeartFull} alt='Icone Coeur' />
+            <img loading="lazy" id="heart-icon" src={HeartFull} alt='Icone Coeur' />
           </button>
         </Link>
 
         {isOpen && (
           <section className='modal'>
             <section className='modal--form'>
-              <img
+              <img loading="lazy"
                 src={Xmark}
                 alt='Icone Croix'
                 className='modal--form--close'
@@ -111,7 +111,7 @@ function Header() {
                   {/* Image et preview */}
                   {preview && (
                     <div>
-                      <img src={preview} alt='Preview' className='preview' />
+                      <img loading="lazy" src={preview} alt='Preview' className='preview' />
                     </div>
                   )}
                   <label>

@@ -1,5 +1,6 @@
 const multer = require('multer')
 
+// Format des images acceptées
 const MIME_TYPE = {
 	'image/jpg': 'jpg',
 	'image/jpeg': 'jpg',
@@ -7,6 +8,7 @@ const MIME_TYPE = {
 	'image/webp': 'webp',
 }
 
+// Enregistrement des images dans le dossier images et les renommer 
 const storage = multer.diskStorage({
 	destination: function (req, file, callback) {
 		callback(null, './images')
