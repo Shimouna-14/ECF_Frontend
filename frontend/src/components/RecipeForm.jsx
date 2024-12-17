@@ -89,7 +89,7 @@ function RecipeForm({ isOpen, onClose }) {
       formDataToSend.append("image", formData.image);
     }
 
-    formDataToSend.append("title", formData.title); // Utilisation explicite
+    formDataToSend.append("title", formData.title); 
     formDataToSend.append("description", formData.description);
     formDataToSend.append("type", formData.type);
     formDataToSend.append("category", formData.category);
