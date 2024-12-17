@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function Favorite() {
+function FavoriteRecipe() {
   // Import des recettes dans le localStorage
   const [favorite, setFavorite] = useState(
     JSON.parse(localStorage.getItem("favorite")) || []
@@ -29,5 +29,5 @@ function Favorite() {
   );
 }
 
-export default Favorite;
+export default FavoriteRecipe;
 

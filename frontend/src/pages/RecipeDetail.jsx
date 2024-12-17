@@ -3,11 +3,12 @@ import Clock from "../assets/clock-solid.svg";
 import Ustensil from "../assets/fork-knife.svg";
 import HeartFull from "../assets/heart-solid.svg";
 import HeartEmpty from "../assets/heart-regular.svg";
+import Trash from "../assets/trash-solid.svg";
 import { useEffect, useState } from "react";
 import FetchData from "../components/Fetch";
 import { useParams } from "react-router-dom";
 
-function Recipe() {
+function RecipeDetail() {
   const { _id } = useParams();
   const [recipe, setRecipe] = useState({});
   const [favorite, setFavorite] = useState(
@@ -20,6 +21,14 @@ function Recipe() {
   // Import de la recette
   const getRecipe = () =>
     FetchData(`http://localhost:3000/recipes/${_id}`, setRecipe);
+
+  // Suppression de la recette
+  const deleteRecipe = async () => {
+    if (window.confirm("Voulez-vous vraiment supprimer cette recette ?")) {
+      await fetch(`http://localhost:3000/recipes/delete/${_id}`, { method: "DELETE" });
+      window.location.href = "/";
+    }
+  };
 
   // Ajout ou suppression de la recette aux favoris dans le localStorage
   const addFavorite = () => {
@@ -71,6 +80,14 @@ function Recipe() {
                 />
                 <p>Favori</p>
               </span>
+              <span>
+                <img 
+                className="trash"
+                loading='lazy'
+                onClick={() => deleteRecipe()} 
+                src={Trash} alt='Icone Corbeille' />
+                <p>Supprimer</p>
+              </span>
             </section>
           </section>
 
@@ -114,4 +131,5 @@ function Recipe() {
   );
 }
 
-export default Recipe;
+export default RecipeDetail;
+

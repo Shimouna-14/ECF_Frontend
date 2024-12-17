@@ -13,6 +13,6 @@ router.get("/", getRecipes);
 router.get("/:_id", getRecipe);
 router.get("/search/:title", searchRecipe);
 router.post("/create", multer, createRecipe);
-router.delete("/delete/:title", deleteRecipe);
+router.delete("/delete/:_id", deleteRecipe);
 
 module.exports = router;

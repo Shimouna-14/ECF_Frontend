@@ -22,7 +22,7 @@ const getRecipe = async (req, res) => {
     }
     return res.status(200).json(recipe);
   } catch (error) {
-    return res.status(500).json();
+    return res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
@@ -35,7 +35,7 @@ const searchRecipe = async (req, res) => {
     }
     return res.status(200).json(recipe);
   } catch (error) {
-    return res.status(500).json();
+    return res.status(500).json({ message: "Erreur serveur" });
   }
 };
 
@@ -59,19 +59,20 @@ const createRecipe = async (req, res) => {
     console.log(error);
     return res.status(500).json({ message: "Erreur serveur" });
   }
-
 };
+
 // Suppression d'une recette
 const deleteRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.findOneAndDelete({ title: req.params.title });
+    const recipe = await Recipe.findOneAndDelete({ _id: req.params._id });
     if (!recipe) {
-      return res.status(404).json({ message: "No recipe deleted" });
+      return res.status(404).json({ message: "No recipe found" });
     }
-    return res.status(200).json(recipe);
-  } catch (error) {}
+    return res.status(200).json({ message: "Recipe deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: "Erreur serveur" });
+  }
 };
-
 module.exports = {
   getRecipes,
   getRecipe,
