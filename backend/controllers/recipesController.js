@@ -43,8 +43,12 @@ const searchRecipe = async (req, res) => {
 const createRecipe = async (req, res) => {
   try {
     const image = req.file ? req.file.filename : null;
-    const recipeData = { ...req.body, image };
-    console.log(req.body);
+    const { ingredients, steps, ...recipeData } = req.body;
+    recipeData.ingredients = JSON.parse(ingredients);
+    recipeData.steps = JSON.parse(steps);
+    if (image) {
+      recipeData.image = image;
+    }
     const recipe = await Recipe.create(recipeData);
 
     if (!recipe) {
@@ -52,8 +56,10 @@ const createRecipe = async (req, res) => {
     }
     return res.status(201).json(recipe);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
+    return res.status(500).json({ message: "Erreur serveur" });
   }
+
 };
 // Suppression d'une recette
 const deleteRecipe = async (req, res) => {

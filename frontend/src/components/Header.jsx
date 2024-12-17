@@ -2,26 +2,26 @@ import { useState, useEffect } from "react";
 import Plus from "../assets/plus-solid.svg";
 import Search from "../assets/search-solid.svg";
 import Xmark from "../assets/xmark-solid.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HeartFull from "../assets/heart-solid.svg";
 import FetchData from "../components/Fetch";
 
 function Header() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
-  const [hours, setHours] = useState("");
+  const [time, setTime] = useState("");
+  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     image: null,
     title: "",
     description: "",
     category: "",
     type: "",
-    ingredients: "",
-    steps: "",
+    ingredients: [""],
+    steps: [""],
     time: "",
   });
-  const [image, setImage] = useState(null);
   const [preview, setPreview] = useState("");
 
   // Import des categories et des types
@@ -50,15 +50,33 @@ function Header() {
   };
 
   // Formatage des heures
-  const handleHours = (e) => {
+  const handleTime = (e) => {
     const value = e.target.value;
     const regex = /^[0-9h ]*$/;
     if (value.match(regex)) {
-      setHours(value);
+      setTime(value);
     }
   };
 
-  console.log(formData);
+  const handleListChange = (e, index, listName) =>
+    setFormData({
+      ...formData,
+      [listName]: formData[listName].map((value, i) =>
+        i === index ? e.target.value : value
+      ),
+    });
+
+  const handleAddItem = (listName) =>
+    setFormData({
+      ...formData,
+      [listName]: [...formData[listName], ""],
+    });
+
+  const handleRemoveItem = (index, listName) =>
+    setFormData({
+      ...formData,
+      [listName]: formData[listName].filter((_, i) => i !== index),
+    });
 
   // Envoi du formulaire pour la création d'une recette
   const handleSubmit = async (e) => {
@@ -73,9 +91,9 @@ function Header() {
     formDataToSend.append("description", formData.description);
     formDataToSend.append("type", formData.type);
     formDataToSend.append("category", formData.category);
-    formDataToSend.append("ingredients", formData.ingredients);
-    formDataToSend.append("steps", formData.steps);
-    formDataToSend.append("time", hours);
+    formDataToSend.append("steps", JSON.stringify(formData.steps));
+    formDataToSend.append("ingredients", JSON.stringify(formData.ingredients));
+    formDataToSend.append("time", time);
 
     for (let [key, value] of formDataToSend.entries()) {
       console.log(`${key}: `, value);
@@ -99,7 +117,8 @@ function Header() {
         });
         setPreview(null);
         alert("Votre recette a été enregistrée avec succès !");
-        setIsOpen(false);
+        // setIsOpen(false);
+        // window.location.reload();
       } else {
         const errorData = await response.json();
         console.error("Erreur serveur :", errorData);
@@ -128,7 +147,12 @@ function Header() {
             id='search'
             placeholder='Rechercher une recette'
           />
-          <img loading='lazy' src={Search} alt='Icone Recherche' />
+          <img
+            loading='lazy'
+            className='search-icon'
+            src={Search}
+            alt='Icone Recherche'
+          />
         </label>
 
         <button className='btn' onClick={() => setIsOpen(true)}>
@@ -211,7 +235,7 @@ function Header() {
                       <textarea
                         id='description'
                         name='description'
-                        placeholder='Description de la recette'
+                        placeholder='Courte description de la recette'
                         value={formData.description}
                         onChange={handleChange}
                         required
@@ -259,29 +283,72 @@ function Header() {
 
                   <section>
                     {/* Liste des ingrédients */}
-                    <label>
+                    <label className='ingredients'>
                       Ingrédients
-                      <textarea
-                        id='ingredients'
-                        name='ingredients'
-                        placeholder="Nom de l'ingrédient"
-                        value={formData.ingredients}
-                        onChange={handleChange}
-                        required
-                      />
+                      {formData.ingredients && formData.ingredients.map((ingredient, index) => (
+                        <div key={index}>
+                          <input
+                            type='text'
+                            value={ingredient}
+                            onChange={(e) =>
+                              handleListChange(e, index, "ingredients")
+                            }
+                            placeholder={`Ingrédient ${index + 1}`}
+                            required
+                          />
+                          <button
+                            type='button'
+                            className='btn-remove'
+                            onClick={() =>
+                              handleRemoveItem(index, "ingredients")
+                            }>
+                            <img
+                              src={Xmark}
+                              className='btn-remove-icon'
+                              alt='Icone Croix'
+                            />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type='button'
+                        className='btn-add'
+                        onClick={() => handleAddItem("ingredients")}>
+                        Ajouter une étape
+                      </button>
                     </label>
 
                     {/* Liste des etapes */}
-                    <label>
+                    <label className='steps'>
                       Etapes
-                      <textarea
-                        id='steps'
-                        name='steps'
-                        placeholder='Étapes de la recette'
-                        value={formData.steps}
-                        onChange={handleChange}
-                        required
-                      />
+                      {formData.steps && formData.steps.map((step, index) => (
+                        <div key={index}>
+                          <textarea
+                            value={step}
+                            onChange={(e) =>
+                              handleListChange(e, index, "steps")
+                            }
+                            placeholder={`Étape ${index + 1}`}
+                            required
+                          />
+                          <button
+                            type='button'
+                            className='btn-remove'
+                            onClick={() => handleRemoveItem(index, "steps")}>
+                            <img
+                              src={Xmark}
+                              className='btn-remove-icon'
+                              alt='Icone Croix'
+                            />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type='button'
+                        className='btn-add'
+                        onClick={() => handleAddItem("steps")}>
+                        Ajouter une étape
+                      </button>
                     </label>
 
                     {/* Temps */}
@@ -291,9 +358,9 @@ function Header() {
                         type='text'
                         name='time'
                         id='time'
-                        value={hours}
+                        value={time}
                         placeholder='hh h mm'
-                        onChange={handleHours}
+                        onChange={handleTime}
                         maxLength={5}
                         required
                       />
@@ -301,7 +368,9 @@ function Header() {
                   </section>
                 </section>
 
-                <button type='submit'>Publier la recette</button>
+                <button className='btn-publish' type='submit'>
+                  Publier la recette
+                </button>
               </form>
             </section>
           </section>
