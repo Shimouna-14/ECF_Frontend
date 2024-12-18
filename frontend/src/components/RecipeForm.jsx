@@ -116,7 +116,7 @@ function RecipeForm({ isOpen, onClose }) {
         });
         setPreview(null);
         alert("Votre recette a été enregistrée avec succès !");
-        isOpen(false);
+        onClose(false);
         window.location.reload();
       } else {
         const errorData = await response.json();
